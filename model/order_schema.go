@@ -101,3 +101,24 @@ func (o *Order) GetOrderByUser(user_id string, limit, offset int) ([]Order, erro
 
 	return result, nil
 }
+
+func (o *Order) UpdateOrder(order Order, newMenu []primitive.ObjectID) error {
+	var tp int
+	// 유저 인풋의 Menu ID 값을 통해 Menu Table의 Price_Won 조회
+	for _, menuId := range newMenu {
+		var menu Menu
+		Cmenu.FindOne(context.TODO(), bson.M{"_id": menuId}).Decode(&menu)
+		tp += menu.Price_won
+	}
+
+	update := bson.M{
+		"menu": newMenu,
+		"paid": tp,
+	}
+
+	_, err := Corder.UpdateOne(context.TODO(), bson.M{"_id": order.Id}, bson.M{"$set": update})
+	if err != nil {
+		return err
+	}
+	return nil
+}
