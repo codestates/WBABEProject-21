@@ -1,17 +1,21 @@
 package router
 
 import (
+	ctl "pkg/controller"
+
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(r *gin.Engine) {
 	router_vendor := r.Group("/api/vendor")
 	{
-		router_vendor.GET("/")
+		router_vendor.POST("/menu", ctl.CreateMenu)
+		router_vendor.DELETE("/menu/:id", ctl.DeleteMenu)
+		router_vendor.PUT("/update/menu/:id", ctl.UpdateMenu) // 메뉴 업데이트
 	}
 	router_customer := r.Group("/api/customer")
 	{
-		router_customer.GET("/menu/:page/:limit")
+		router_customer.GET("/menu/:page/:limit", ctl.GetMenus)
 	}
 }
 
