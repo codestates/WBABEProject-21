@@ -1,0 +1,6 @@
+[server] ##nomal type
+port = ":8080"
+
+[db] #data access object
+host = "mongodb+srv://hdlee:2022@cluster0.3usmacx.mongodb.net/?retryWrites=true&w=majority"
+database = "store"
