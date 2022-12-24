@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Order struct {
@@ -78,4 +79,25 @@ func (o *Order) FindOrderCountByUserId(userId primitive.ObjectID) (int64, error)
 	}
 
 	return count, nil
+}
+
+func (o *Order) GetOrderByUser(user_id string, limit, offset int) ([]Order, error) {
+	var result []Order
+	limit_int64 := int64(limit)
+	offset_int64 := int64(offset)
+	user_id_toObj, _ := primitive.ObjectIDFromHex(user_id)
+	fmt.Println(user_id_toObj)
+
+	Opt := options.Find().SetSort(bson.D{{"createdAt", -1}}).SetLimit(limit_int64).SetSkip(offset_int64)
+
+	cur, err := Corder.Find(context.TODO(), bson.D{{"user", user_id_toObj}}, Opt)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, errors.New("FIND ERR")
+	}
+	cur.Decode(&result)
+	cur.All(context.TODO(), &result)
+
+	return result, nil
 }
