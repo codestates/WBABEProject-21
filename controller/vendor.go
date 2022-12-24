@@ -23,6 +23,7 @@ func CreateMenu(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, nil)
+
 }
 
 func UpdateMenu(ctx *gin.Context) {
@@ -41,6 +42,7 @@ func UpdateMenu(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, nil)
+
 }
 
 func DeleteMenu(ctx *gin.Context) {

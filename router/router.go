@@ -11,11 +11,13 @@ func SetupRouter(r *gin.Engine) {
 	{
 		router_vendor.POST("/menu", ctl.CreateMenu)
 		router_vendor.DELETE("/menu/:id", ctl.DeleteMenu)
-		router_vendor.PUT("/update/menu/:id", ctl.UpdateMenu) // 메뉴 업데이트
+		router_vendor.PUT("/update/menu/:id", ctl.UpdateMenu)
+		router_vendor.PUT("/update/status/:id", ctl.UpdateStatus) // 오더 상태 업데이트
 	}
 	router_customer := r.Group("/api/customer")
 	{
 		router_customer.GET("/menu/:page/:limit", ctl.GetMenus)
+		router_customer.POST("/order", ctl.CreateOrder) // 오더생성
 	}
 }
 

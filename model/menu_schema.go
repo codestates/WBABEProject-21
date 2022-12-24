@@ -15,15 +15,16 @@ import (
 )
 
 type Menu struct {
-	Name        string    `bson:"name"`
-	Is_active   bool      `bson:"is_active"`
-	Amount      int       `bson:"amount"`
-	MadeIn      string    `bson:"madein"`
-	Price_won   int       `bson:"price_won"`
-	Today_menu  bool      `bson:"today_menu"`
-	Spicy_level int       `bson:"spicy_level"`
-	CreatedAt   time.Time `bson:"createdAt"`
-	UpdateAt    time.Time `bson:"updateAt"`
+	Id          primitive.ObjectID `bson:"_id,omitempty"`
+	Name        string             `bson:"name"`
+	Is_active   bool               `bson:"is_active"`
+	Amount      int                `bson:"amount"`
+	MadeIn      string             `bson:"madein"`
+	Price_won   int                `bson:"price_won"`
+	Today_menu  bool               `bson:"today_menu"`
+	Spicy_level int                `bson:"spicy_level"`
+	CreatedAt   time.Time          `bson:"createdAt"`
+	UpdateAt    time.Time          `bson:"updateAt"`
 }
 
 var Mmenu *Menu
@@ -33,6 +34,8 @@ func (m *Menu) CreateMenu(input Menu) error {
 	currentTime := utils.MongoTime()
 	input.CreatedAt = currentTime
 	input.UpdateAt = currentTime
+
+	fmt.Println(input)
 	_, err := Cmenu.InsertOne(context.TODO(), input)
 	if err != nil {
 		fmt.Println(err)
