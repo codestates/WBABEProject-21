@@ -54,3 +54,21 @@ func DeleteMenu(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, nil)
 }
+
+func UpdateStatus(ctx *gin.Context) {
+	id := ctx.Param("id")
+	var Input md.Order
+	if err := ctx.BindJSON(&Input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	if err := md.Morder.UpdateStatus(Input, id); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, nil)
+}

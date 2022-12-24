@@ -1,9 +1,11 @@
 package model
 
 import (
+	"context"
 	"pkg/config"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -18,3 +20,13 @@ type Order struct {
 
 var Morder *Menu
 var Corder *mongo.Collection = config.SelectCol(config.DB, "order")
+
+func (o *Order) UpdateStatus(input Order, id string) error {
+	objId, _ := primitive.ObjectIDFromHex(id)
+	update := bson.M{"status": input.Status}
+	_, err := Corder.UpdateOne(context.TODO(), bson.M{"_id": objId}, bson.M{"$set": update})
+	if err != nil {
+		return err
+	}
+	return nil
+}
