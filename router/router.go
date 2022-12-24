@@ -19,6 +19,7 @@ func SetupRouter(r *gin.Engine) {
 		router_customer.GET("/menu/:page/:limit", ctl.GetMenus)                // 메뉴조회
 		router_customer.POST("/order", ctl.CreateOrder)                        // 오더생성
 		router_customer.GET("/order/:page/:limit/:userid", ctl.GetOrderByUser) // Order 기록 찾기 By User
+		router_customer.PUT("/order", ctl.ChangeMenu)                          // Order 업데이트
 	}
 }
 

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	md "pkg/model"
 	"strconv"
@@ -99,4 +100,45 @@ func GetOrderByUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"payload": ordersResult,
 	})
+}
+
+func ChangeMenu(ctx *gin.Context) {
+	// 1. Order를 찾고, Status가 1보다 큰지 확인
+	var userInput ReqForm_ChangeMenu
+
+	err := ctx.ShouldBind(&userInput)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result_recent_order, err := md.Morder.GetOrderByUser(userInput.UserId, 1, 1)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	fmt.Println("Get Order : ", result_recent_order)
+	if len(result_recent_order) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"err": "No Order Exist",
+		})
+		return
+	}
+	// Status가 1보다 크다면 이미 진행중인 상태이므로 변경 불가.
+	if result_recent_order[0].Status > 1 {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"err": "Food Being Cooked",
+		})
+		return
+	}
+
+	// 아니면, 변경 성공
+	err = md.Morder.UpdateOrder(result_recent_order[0], userInput.NewMenu)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }

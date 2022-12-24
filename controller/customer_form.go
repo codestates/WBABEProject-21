@@ -9,3 +9,8 @@ type ReqForm_CreateOrder struct {
 
 type RespForm_CreateOrder struct {
 }
+
+type ReqForm_ChangeMenu struct {
+	UserId  string               ` bson:"userid"`
+	NewMenu []primitive.ObjectID ` bson:"newmenu"`
+}
