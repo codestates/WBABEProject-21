@@ -15,6 +15,10 @@ import (
 
 type User struct {
 	Id           primitive.ObjectID `bson:"_id", omitempty`
+	/*
+	유저의 경우에 벤더인지 고객인지에 대해서 구분할 수 필드가 필요해 보입니다.
+	그 값을 이용해서, 벤더인 경우에만 메뉴를 생성할 수 있도록 제어도 가능합니다.
+	*/
 	Nickname     string             `bson:"nickname"`
 	RegisteredAt time.Time          `bson:"registered_at, omitempty"`
 }
@@ -43,6 +47,9 @@ func (u *User) CreateUser(nickname string) (User, error) {
 	return user, nil
 }
 
+/*
+기존 함수와 연관성이 떨어지는 부분이라면, 이렇게 따로 분리해둔 점 좋습니다.
+*/
 func (u *User) FindUserByNickname(nickname string) (User, error) {
 	var user User
 	filter := bson.D{{"nickname", nickname}}

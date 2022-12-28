@@ -23,6 +23,10 @@ type Menu struct {
 	Price_won   int                `bson:"price_won"`
 	Today_menu  bool               `bson:"today_menu"`
 	Spicy_level int                `bson:"spicy_level"`
+	/*
+	기본적으로 모든 값들에 대해서 이렇게 생성과 업데이트 시간을 기록하면 추후에 디버깅을 할 때 굉장이 좋습니다.
+	필수적인 요소인데 놓치지 않아 좋은 포인트입니다.
+	*/
 	CreatedAt   time.Time          `bson:"createdAt"`
 	UpdateAt    time.Time          `bson:"updateAt"`
 }
@@ -65,6 +69,9 @@ func (m *Menu) UpdateMenu(input Menu, id string) error {
 
 func (m *Menu) DeleteMenu(id string) error {
 	objId, _ := primitive.ObjectIDFromHex(id)
+	/*
+	메뉴 삭제시 데이터를 실제로 지우는 것이 아니라, Is Active 필드를 false로 업데이트를 처리해야할 것 같습니다.
+	*/
 	_, err := Cmenu.DeleteOne(context.TODO(), bson.M{"_id": objId})
 	if err != nil {
 		return err
