@@ -17,9 +17,18 @@ import (
 type Order struct {
 	Id           primitive.ObjectID   `bson:"_id, omitempty"`
 	Menu         []primitive.ObjectID `bson:"menu"`
+	/*
+	Enum을 활용해보는 것은 어떨까요? int형으로 저장하고 주석을 남겨두면 어떤 값인지는 확인할 수 있지만
+	숫자로 저장되기에 무슨 상태인지 확인하려면 코드를 다시 확인해야하는 번거로움이 있습니다.
+	String 형식의 Enum을 활용해보시는 것을 추천 드립니다.
+	*/
 	Status       int                  `bson:"status"` // 1=주문접수 || 2=조리중(취소불가) || 3=완료 || 4=주문취소
 	Paid         int                  `bson:"paid, omitempty"`
 	User         primitive.ObjectID   `bson:"user"`
+	/*
+	주문의 경우에도 Menu와 같이 created_at, updated_at 필드를 가지는 것이 좋아보입니다.
+	거의 모든 경우에 위의 두 값은 필수적으로 들어가야 디버깅에 좋습니다.
+	*/
 	ReceiptionAt time.Time            `bson:"receiptionAt"`
 }
 
@@ -40,6 +49,10 @@ func (o *Order) CreateOrder(input Order, discount_rate int) error {
 	var OrderForm Order
 
 	tp := 0
+	/*
+	라우터 부분에서도 코멘트를 드렸지만, 인풋값으로 받기보단 nested한 구성을 통해서 메뉴의 아이디를 가져오는 편이 좋아보입니다.
+	이렇게 하는 경우 어쨌든 Database에 접속하고 데이터를 가져오는 시간만큼 지연이 됩니다. 
+	*/
 	// 유저 인풋의 Menu ID 값을 통해 Menu Table의 Price_Won 조회
 	for _, menuId := range input.Menu {
 		var menu Menu

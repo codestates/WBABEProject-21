@@ -22,6 +22,9 @@ func CreateMenu(ctx *gin.Context) {
 		})
 		return
 	}
+	/*
+	리소스 생성의 경우에는 201 created를 return하는 것이 일반적입니다.
+	*/
 	ctx.JSON(http.StatusOK, nil)
 
 }
@@ -54,6 +57,9 @@ func DeleteMenu(ctx *gin.Context) {
 		})
 		return
 	}
+	/*
+	삭제 후에는 일반적으로 204 No Content를 return 합니다.
+	*/
 	ctx.JSON(http.StatusOK, nil)
 }
 
